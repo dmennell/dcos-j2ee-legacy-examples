@@ -1,0 +1,79 @@
+{
+  "id": "/tomcat-crud",
+  "backoffFactor": 1.15,
+  "backoffSeconds": 1,
+  "cmd": "cd /mnt/mesos/sandbox && java -jar gs-crud-with-vaadin-0.1.0.jar",
+  "container": {
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 0,
+        "labels": {
+          "VIP_0": "/tomcat-crud:8080"
+        },
+        "protocol": "tcp",
+        "servicePort": 10103,
+        "name": "tomcat"
+      }
+    ],
+    "type": "DOCKER",
+    "volumes": [],
+    "docker": {
+      "image": "tomcat",
+      "forcePullImage": false,
+      "privileged": false,
+      "parameters": []
+    }
+  },
+  "cpus": 2,
+  "disk": 0,
+  "fetch": [
+    {
+      "uri": "https://github.com/mfjohnson/tomcat_boot/raw/master/J2EE_Migrate/Tomcat/TomcatDeploy/gs-crud-with-vaadin-0.1.0.jar",
+      "extract": true,
+      "executable": false,
+      "cache": false
+    },
+    {
+      "uri": "https://raw.githubusercontent.com/mfjohnson/tomcat_boot/master/J2EE_Migrate/Tomcat/TomcatDeploy/CreateMySQL_DB.sql",
+      "extract": true,
+      "executable": false,
+      "cache": false
+    }
+  ],
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 300,
+      "intervalSeconds": 60,
+      "maxConsecutiveFailures": 3,
+      "portIndex": 0,
+      "timeoutSeconds": 20,
+      "delaySeconds": 15,
+      "protocol": "MESOS_HTTP",
+      "path": "/"
+    }
+  ],
+  "instances": 3,
+  "labels": {
+    "HAPROXY_GROUP": "external"
+  },
+  "maxLaunchDelaySeconds": 3600,
+  "mem": 2048,
+  "gpus": 0,
+  "networks": [
+    {
+      "mode": "container/bridge"
+    }
+  ],
+  "requirePorts": false,
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 1
+  },
+  "killSelection": "YOUNGEST_FIRST",
+  "unreachableStrategy": {
+    "inactiveAfterSeconds": 0,
+    "expungeAfterSeconds": 0
+  },
+  "constraints": []
+}
