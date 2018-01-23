@@ -1,0 +1,86 @@
+{
+  "id": "/MyApplicationGroup/wildfly-benefits-app",
+  "backoffFactor": 1.15,
+  "backoffSeconds": 1,
+  "cmd": "env | sort && ls -lt  && pwd && mv /mnt/mesos/sandbox/benefits.war /benefits.war && ./standalone.sh",
+  "container": {
+    "portMappings": [
+      {
+        "containerPort": 8080,
+        "hostPort": 0,
+        "labels": {
+          "VIP_0": "/wildfly:8080"
+        },
+        "protocol": "tcp",
+        "servicePort": 10100,
+        "name": "Wildfly-app-server"
+      },
+      {
+        "containerPort": 9990,
+        "hostPort": 0,
+        "labels": {
+          "VIP_0": "/wildfly-console:8080"
+        },
+        "protocol": "tcp",
+        "servicePort": 10101,
+        "name": "Wildfly-console"
+      }
+    ],
+    "type": "MESOS",
+    "volumes": [],
+    "docker": {
+      "image": "markfjohnson/wildfly",
+      "forcePullImage": true,
+      "parameters": []
+    }
+  },
+  "cpus": 1,
+  "disk": 0,
+  "env": {
+
+  },
+  "fetch": [
+    {
+      "uri": "http://www.oracle.com/webfolder/technetwork/tutorials/obe/fmw/wls/12c/03-DeployApps/files/benefits.war",
+      "extract": true,
+      "executable": false,
+      "cache": false
+    }
+  ],
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 300,
+      "ignoreHttp1xx": false,
+      "intervalSeconds": 25,
+      "maxConsecutiveFailures": 3,
+      "portIndex": 0,
+      "timeoutSeconds": 20,
+      "delaySeconds": 15,
+      "protocol": "HTTP",
+      "path": "/benefits/"
+    }
+  ],
+  "instances": 1,
+  "labels": {
+    "HAPROXY_GROUP": "external"
+  },
+  "maxLaunchDelaySeconds": 3600,
+  "mem": 4098,
+  "gpus": 0,
+  "networks": [
+    {
+      "mode": "container/bridge"
+    }
+  ],
+  "requirePorts": false,
+  "upgradeStrategy": {
+    "maximumOverCapacity": 1,
+    "minimumHealthCapacity": 1
+  },
+  "killSelection": "YOUNGEST_FIRST",
+  "unreachableStrategy": {
+    "inactiveAfterSeconds": 0,
+    "expungeAfterSeconds": 0
+  },
+  "constraints": []
+}
