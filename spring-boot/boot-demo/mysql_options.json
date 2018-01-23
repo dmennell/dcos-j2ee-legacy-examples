@@ -1,0 +1,36 @@
+{
+  "service": {
+    "name": "mysql"
+  },
+  "mysql": {
+    "cpus": 0.5,
+    "mem": 1024
+  },
+  "database": {
+    "name": "defaultdb",
+    "username": "admin",
+    "password": "password",
+    "root_password": "root"
+  },
+  "storage": {
+    "host_volume": "/tmp",
+    "persistence": {
+      "enable": true,
+      "volume_size": 256,
+      "external": {
+        "enable": true,
+        "volume_name": "mysql",
+        "provider": "dvdi",
+        "driver": "rexray"
+      }
+    }
+  },
+  "networking": {
+    "port": 3306,
+    "host_mode": false,
+    "external_access": {
+      "enable": true,
+      "external_access_port": 13306
+    }
+  }
+}
