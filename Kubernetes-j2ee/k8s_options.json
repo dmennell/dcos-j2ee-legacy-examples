@@ -1,0 +1,18 @@
+{
+  "service": {
+    "log_level": "INFO"
+  },
+  "kubernetes": {
+    "node_count": 3,
+    "public_node_count": 1
+  },
+  "apiserver": {
+    "count": 1
+  },
+  "scheduler": {
+    "count": 1
+  },
+  "controllermanager": {
+    "count": 1
+  }
+}
