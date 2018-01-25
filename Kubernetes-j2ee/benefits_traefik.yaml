@@ -1,0 +1,164 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: wls-benefits-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: wls-benefits-deployment
+    spec:
+      containers:
+      - name: weblogic12
+        image: markfjohnson/wls_benefits_k8s
+        ports:
+        - containerPort: 8001
+        - containerPort: 7001
+        command: ["/bin/sh", "-c", "env|sort && ls -lt && pwd && bash startWebLogic.sh"]
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    name: wls-benefits-service
+  name:  wls-benefits-service
+spec:
+  ports:
+    # The port that this service should serve on.
+    - port: 8001
+      name: app
+    - port: 7001
+      name: console
+  # Label keys and values that must match in order to receive traffic for this service.
+  selector:
+    app: wls-benefits-deployment
+  type: ClusterIP
+---
+# Service Account
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: traefik-ingress-controller
+---
+# Deployment
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: traefik-ingress-lb
+  labels:
+    k8s-app: traefik-ingress-lb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: traefik-ingress-lb
+  template:
+    metadata:
+      labels:
+        k8s-app: traefik-ingress-lb
+        name: traefik-ingress-lb
+    spec:
+      serviceAccountName: traefik-ingress-controller
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: traefik:latest
+        name: traefik-ingress-lb
+        ports:
+        - name: http
+          containerPort: 80
+          hostPort: 80
+        - name: admin
+          containerPort: 8080
+        securityContext:
+          privileged: true
+        args:
+        - -d
+        - --web
+        - --kubernetes
+      nodeSelector:
+        kubernetes.dcos.io/node-type: public
+      tolerations:
+      - key: "node-type.kubernetes.dcos.io/public"
+        operator: "Equal"
+        value: "true"
+        effect: "NoSchedule"
+
+---
+# Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-ingress-service
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+    - protocol: TCP
+      port: 80
+      name: web
+    - protocol: TCP
+      port: 8080
+      name: admin
+  type: NodePort
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-web-ui
+spec:
+  selector:
+    k8s-app: traefik-ingress-lb
+  ports:
+  - port: 80
+    name: traefik-web
+  - port: 8080
+    name: traefik-admin
+
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    traefik.frontend.rule.type: PathPrefixStrip
+spec:
+  rules:
+    - http:
+        paths:
+        - path: /traefik
+          backend:
+            serviceName: traefik-web-ui
+            servicePort: 8080
+        - path: /web
+          backend:
+              serviceName: nginxservice
+              servicePort: 80
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: benefits-ingress
+  annotations:
+    kubernetes.io/ingress.class: traefik
+#    ingress.kubernetes.io/rewrite-target: /
+#    traefik.backend.loadbalancer.stickiness: true
+spec:
+  rules:
+    - http:
+        paths:
+        - path: /console
+          backend:
+            serviceName: wls-benefits-service
+            servicePort: 7001
+        - path: /benefits
+          backend:
+            serviceName: wls-benefits-service
+            servicePort: 8001
