@@ -1,5 +1,5 @@
 {
-  "id": "/benefits/weblogic-benefits-app",
+  "id": "/dept-a/weblogic-benefits-app",
   "backoffFactor": 1.15,
   "backoffSeconds": 1,
   "cmd": "env | sort && ls -lt /u01/oracle && pwd && mv /mnt/mesos/sandbox/benefits.war /u01/oracle/benefits.war && wlst /u01/oracle/app-deploy.py && startWebLogic.sh",
@@ -82,7 +82,7 @@
     "HAPROXY_GROUP": "external"
   },
   "maxLaunchDelaySeconds": 3600,
-  "mem": 4098,
+  "mem": 2048,
   "gpus": 0,
   "networks": [
     {

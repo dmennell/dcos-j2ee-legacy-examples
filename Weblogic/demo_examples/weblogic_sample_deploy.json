@@ -1,5 +1,5 @@
 {
-  "id": "/hello-world/weblogic-sample-app",
+  "id": "/dept-b/weblogic-sample-app",
   "backoffFactor": 1.15,
   "backoffSeconds": 1,
   "cmd": "env | sort && ls -lt /u01/oracle && pwd &&  wlst /u01/oracle/app-deploy.py && startWebLogic.sh",
@@ -74,7 +74,7 @@
     "HAPROXY_GROUP": "external"
   },
   "maxLaunchDelaySeconds": 3600,
-  "mem": 4098,
+  "mem": 2048,
   "gpus": 0,
   "networks": [
     {

@@ -1,14 +1,4 @@
 #!/usr/bin/env bash
-dcos package install --yes marathon-lb
-dcos package install --yes --cli dcos-enterprise-cli
-dcos package install --yes --cli jenkins
-
-dcos marathon app add ../Weblogic/demo_examples/benefits_autoscale.json
-#echo "Deploy benefits"
-#dcos marathon app add ../Weblogic/demo_examples/weblogic_benefits_deploy.json
-echo "Deploy Sample"
-dcos marathon app add ../Weblogic/demo_examples/weblogic_sample_deploy.json
-
 echo "Setup security rules"
 dcos security org groups create dept-a
 dcos security org groups create dept-b

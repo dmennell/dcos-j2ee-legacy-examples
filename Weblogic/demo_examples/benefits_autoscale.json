@@ -1,10 +1,10 @@
 {
-  "id": "/benefits/benefits-autoscale",
+  "id": "/dept-a/benefits-autoscale",
   "args":[
     "--marathon", "http://leader.mesos:8080",
     "--haproxy", "http://marathon-lb.marathon.mesos:9090",
-    "--target-rps", "20",
-    "--apps", "benefits_weblogic-benefits-app_10100",
+    "--target-rps", "10",
+    "--apps", "dept_a_weblogic-benefits-app_10100",
     "--threshold-instances", "1",
     "--samples", "2",
     "--interval", "20"
