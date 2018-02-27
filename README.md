@@ -9,3 +9,4 @@
 
 ## Legacy Examples
 * [JBoss Wildfly](JBoss/README.md)
+* [WebLogic Examples](Weblogic/demo_examples/README.md)
