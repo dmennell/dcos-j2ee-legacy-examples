@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 dcos package install --yes marathon-lb
 dcos package install --yes --cli dcos-enterprise-cli
-#dcos package install --yes jenkins
 
 dcos marathon app add ../Weblogic/demo_examples/benefits_autoscale.json
 #echo "Deploy benefits"

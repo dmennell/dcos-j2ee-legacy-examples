@@ -9,44 +9,6 @@
   },
   "containers": [
     {
-      "name": "prometheus",
-      "resources": {
-        "cpus": 0.1,
-        "mem": 1024,
-        "disk": 0
-      },
-      "image": {
-        "kind": "DOCKER",
-        "id": "philipnrmn/prometheus-on-dcos:proxy",
-        "forcePull": true
-      },
-      "healthCheck": {
-        "http": {
-          "scheme": "HTTP",
-          "endpoint": "prom",
-          "path": "/"
-        },
-        "gracePeriodSeconds": 300,
-        "intervalSeconds": 60,
-        "maxConsecutiveFailures": 3,
-        "timeoutSeconds": 20,
-        "delaySeconds": 15
-      },
-      "endpoints": [
-        {
-          "name": "prom",
-          "containerPort": 9090,
-          "hostPort": 0,
-          "protocol": [
-            "tcp"
-          ],
-          "labels": {
-            "VIP_0": "/monitoring/metrics:9090"
-          }
-        }
-      ]
-    },
-    {
       "name": "grafana",
       "resources": {
         "cpus": 0.1,
@@ -86,7 +48,12 @@
         "command": {
           "shell": "cd / && /run.sh"
         }
-      }
+      },
+      "artifacts": [
+        {
+          "uri": "https://gist.githubusercontent.com/philipnrmn/597ca643880f1833a5ecace1a786bd92/raw/3c88c46f854fd982a1f6f56a75c44cbfdf0dd0d8/prometheus.yaml"
+        }
+      ]
     }
   ],
   "networks": [

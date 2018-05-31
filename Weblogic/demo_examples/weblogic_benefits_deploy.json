@@ -1,5 +1,8 @@
 {
-  "id": "/dept-a/weblogic-benefits-app",
+  "labels": {
+    "HAPROXY_GROUP": "external"
+  },
+  "id": "/dept-a/weblogic-benefits-app2",
   "backoffFactor": 1.15,
   "backoffSeconds": 1,
   "cmd": "env | sort && ls -lt /u01/oracle && pwd && mv /mnt/mesos/sandbox/benefits.war /u01/oracle/benefits.war && wlst /u01/oracle/app-deploy.py && startWebLogic.sh",
@@ -47,11 +50,13 @@
   "cpus": 1,
   "disk": 0,
   "env": {
+    "ADMIN_PASS": {
+      "secret": "secret0"
+    },
     "DOMAIN_NAME": "base_domain",
     "CLUSTER_NAME": "DockerCluster",
     "APP_NAME": "benefits",
     "ADMIN_PORT": "7001",
-    "ADMIN_PASS": "Welcome1",
     "DOMAIN_HOME": "/u01/oracle/user_projects/domains/base_domain",
     "APP_PKG_FILE": "benefits.war",
     "ADMIN_NAME": "weblogic"
@@ -78,9 +83,6 @@
     }
   ],
   "instances": 1,
-  "labels": {
-    "HAPROXY_GROUP": "external"
-  },
   "maxLaunchDelaySeconds": 3600,
   "mem": 2048,
   "gpus": 0,
@@ -90,6 +92,11 @@
     }
   ],
   "requirePorts": false,
+  "secrets": {
+    "secret0": {
+      "source": "ADMIN_PASS"
+    }
+  },
   "upgradeStrategy": {
     "maximumOverCapacity": 1,
     "minimumHealthCapacity": 1
